@@ -5,12 +5,16 @@ header {
 
 main {
     text-align: center;
-    
-
 }
 
-.question1 {
+#question1 {
     text-align: start;
+    display: none
+}
+
+#question2 {
+    text-align: start;
+    display: none;
 }
 
 ul {
