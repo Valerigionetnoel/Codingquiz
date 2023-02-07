@@ -88,10 +88,13 @@ function endQuiz(){
     result.innerHTML += resultText
    
     var enterInitials = `
-    <form class=="initials">
-    <input id="highscore" type="text" placeholder="Please enter initials"><button id="save">Save</button>
+    <div class=="initials">
+    <input id="highscore" type="text" placeholder="Please enter initials"><button id="set">Save</button>
     `;
     result.innerHTML += enterInitials
+    document.addEventListener("DOMContentLoaded", () => {
+        document.getElementById("save").addEventListener("click", saveInitials);
+    });
 }
 function saveHighScore() {
 
@@ -99,18 +102,18 @@ function saveHighScore() {
 var names = []
 var saveInitials = (ev) =>{
     ev.preventDefault();
+    var names = JSON.parse(localStorage.getItem("NameAndScore"))|| []
     let score = {
         initials: document.getElementById("highscore").value,
-        highScore: document.getElementById("timer-result")
+        highScore: secondsLeft
     }
     names.push(score);
     document.querySelector("form").reset()
 
+    console.log(names)
     localStorage.setItem("NameAndScore", JSON.stringify(names))
 }
-document.addEventListener("DOMContentLoaded", () => {
-    document.getElementById("save").addEventListener("click", saveInitials);
-});
+
 
 // console.log(questionContainer)
 // for (let i = 0; i < questions.length; i++) {
