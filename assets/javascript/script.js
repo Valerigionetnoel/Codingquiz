@@ -1,16 +1,15 @@
 var timerElement = document.querySelector(".timer");
-var secondsLeft = 90;
+var secondsLeft = 20;
 var startElement = document.querySelector("#startQuiz");
 const questionContainer = document.getElementById("question-container");
 var startCount = 0
-
-// var wrongAnswer1 = document.querySelector("#wrong1")
-// var wrongAnswer2 = document.querySelector("#wrong2")
-// var wrongAnswer3 = document.querySelector("#wrong3")
-// var rightAnswer1 = document.querySelector("#right1")
+var timeInterval = "";
+var result = document.getElementById("result")
+// var save = document.getElementById("save")
+// var highScore = document.getElementById("highscore")
 
 startElement.addEventListener("click", function(){
-    var timeInterval = setInterval(function(){
+    timeInterval = setInterval(function(){
         secondsLeft--;
         timerElement.textContent = "Time remaining: " + secondsLeft + ".";
 
@@ -21,13 +20,8 @@ startElement.addEventListener("click", function(){
     }, 1000);
     
     document.getElementById("quiz").style.display = "none";
-    // questionContainer.style.display = "block";
     getNextQuestion()
 })
-
-// function gameOver(){
-//     console.log("Game Over")
-// }
 
 const questions = [
     {
@@ -49,8 +43,10 @@ const questions = [
 
 function getNextQuestion() {
     questionContainer.innerHTML = "";
-    if (startCount >= questions.length) {
-       return
+    if (startCount >= questions.length || secondsLeft <= 0) {
+        clearInterval(timeInterval);
+        endQuiz();
+        return(timeInterval)
     }
     
     const question = questions[startCount];
@@ -72,22 +68,49 @@ function getNextQuestion() {
       buttons.forEach(button => {
         button.onclick = function () {
             if (button.innerText !== questions[startCount].answer) {
-                secondsLeft = secondsLeft - 15
+                secondsLeft = secondsLeft - 15;
+                timerElement.textContent = "Time remaining: " + secondsLeft + ".";
             }
             startCount = startCount + 1
             getNextQuestion()
         }
-      })
-       
-   
+      }) 
 }
 function endQuiz(){
-    console.log(startCount)
-    if (secondsLeft <=0 || startCount.length === 3){
-        console.log("end")
-    }
+    if (secondsLeft < 0){
+        secondsLeft = 0
+    } 
+   var resultText = `
+   <div class="timer-result">
+    <p>You have ${secondsLeft} point(s)</p>
+    </div>
+    `;
+    result.innerHTML += resultText
+   
+    var enterInitials = `
+    <form class=="initials">
+    <input id="highscore" type="text" placeholder="Please enter initials"><button id="save">Save</button>
+    `;
+    result.innerHTML += enterInitials
 }
+function saveHighScore() {
 
+}
+var names = []
+var saveInitials = (ev) =>{
+    ev.preventDefault();
+    let score = {
+        initials: document.getElementById("highscore").value,
+        highScore: document.getElementById("timer-result")
+    }
+    names.push(score);
+    document.querySelector("form").reset()
+
+    localStorage.setItem("NameAndScore", JSON.stringify(names))
+}
+document.addEventListener("DOMContentLoaded", () => {
+    document.getElementById("save").addEventListener("click", saveInitials);
+});
 
 // console.log(questionContainer)
 // for (let i = 0; i < questions.length; i++) {
