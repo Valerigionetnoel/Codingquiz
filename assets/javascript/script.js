@@ -16,16 +16,18 @@ startElement.addEventListener("click", function(){
 
         if(secondsLeft <= 0) {
             clearInterval(timeInterval);
-            gameOver();
+            endQuiz();
         }
     }, 1000);
-    function gameOver(){
-        console.log("Game Over")
-    }
+    
     document.getElementById("quiz").style.display = "none";
     // questionContainer.style.display = "block";
     getNextQuestion()
 })
+
+// function gameOver(){
+//     console.log("Game Over")
+// }
 
 const questions = [
     {
@@ -48,7 +50,6 @@ const questions = [
 function getNextQuestion() {
     questionContainer.innerHTML = "";
     if (startCount >= questions.length) {
-       endQuiz()
        return
     }
     
@@ -81,8 +82,12 @@ function getNextQuestion() {
    
 }
 function endQuiz(){
-      
+    console.log(startCount)
+    if (secondsLeft <=0 || startCount.length === 3){
+        console.log("end")
+    }
 }
+
 
 // console.log(questionContainer)
 // for (let i = 0; i < questions.length; i++) {
