@@ -1,12 +1,15 @@
+//Those are most of the variables I'm using in my webapplication.
+
 var timerElement = document.querySelector(".timer");
-var secondsLeft = 20;
+var secondsLeft = 60;
 var startElement = document.querySelector("#startQuiz");
 const questionContainer = document.getElementById("question-container");
 var startCount = 0
 var timeInterval = "";
 var result = document.getElementById("result")
-// var save = document.getElementById("save")
-// var highScore = document.getElementById("highscore")
+
+//This is a timer that I've program. Once it hit zero it clear the timer, and does the end
+//quiz function.
 
 startElement.addEventListener("click", function(){
     timeInterval = setInterval(function(){
@@ -23,6 +26,8 @@ startElement.addEventListener("click", function(){
     getNextQuestion()
 })
 
+//Those are my questions, choices and answer for the quiz.
+
 const questions = [
     {
         question: "What is use at the end of a function?",
@@ -30,23 +35,35 @@ const questions = [
         answer: "parentheses"
     },
     {
-        question: "What is the sum of two and two?",
-        choices: ["three", "four", "five", "six"],
-        answer: "four"
+        question: "What is NOT a data type?",
+        choices: ["string", "boolean", "variable", "number"],
+        answer: "variable"
     },
     {
-        question: "What is the last letter of the alphabet",
-        choices: ["w", "x", "y", "z" ],
-        answer: "z"
+        question: "What would console.log('hello') log?",
+        choices: ["hello", "('hello')", "'hello'", "nothing" ],
+        answer: "hello"
+    },
+    {
+        question: "What is 'var' being replace with?", 
+        choices: ["con", "let", "this", "sum"],
+        answer: "let"
+    },
+    {
+        question: "What does '>=' mean?",
+        choices: ["less than or equal", "equal", "less than", "more than or equal"],
+        answer: "more than or equal"
     }
 ];
+
+//This is my function that make the question appear on the screen.
 
 function getNextQuestion() {
     questionContainer.innerHTML = "";
     if (startCount >= questions.length || secondsLeft <= 0) {
         clearInterval(timeInterval);
         endQuiz();
-        return(timeInterval)
+        return
     }
     
     const question = questions[startCount];
@@ -76,98 +93,52 @@ function getNextQuestion() {
         }
       }) 
 }
-function endQuiz(){
-    if (secondsLeft < 0){
-        secondsLeft = 0
-    } 
-   var resultText = `
+
+//This is the function that run once the timer hit zero, or that all the question are 
+//answered.
+
+function endQuiz() {
+    if (secondsLeft < 0) {
+        secondsLeft = 0;
+    }
+    document.getElementById("question-container").style.display = "none";
+    var resultText = `
    <div class="timer-result">
     <p>You have ${secondsLeft} point(s)</p>
     </div>
     `;
-    result.innerHTML += resultText
-   
+    result.innerHTML += resultText;
+
     var enterInitials = `
-    <div class=="initials">
-    <input id="highscore" type="text" placeholder="Please enter initials"><button id="set">Save</button>
+    <div class="initials">
+    <input id="user-highscore" type="text" placeholder="Please enter initials"><button id="set">Save</button>
     `;
-    result.innerHTML += enterInitials
-    document.addEventListener("DOMContentLoaded", () => {
-        document.getElementById("save").addEventListener("click", saveInitials);
-    });
-}
-function saveHighScore() {
+    result.innerHTML += enterInitials;
 
+    document.getElementById('set').addEventListener('click', saveInitials);
 }
-var names = []
-var saveInitials = (ev) =>{
+
+//This is a function that save the highscore in the local storage, and that display it
+//on the screen.
+
+function saveHighScore() {}
+var names = [];
+
+var saveInitials = (ev) => {
     ev.preventDefault();
-    var names = JSON.parse(localStorage.getItem("NameAndScore"))|| []
+    
+    var names = JSON.parse(localStorage.getItem('NameAndScore')) || [];
     let score = {
-        initials: document.getElementById("highscore").value,
-        highScore: secondsLeft
-    }
+        initials: document.getElementById('user-highscore').value.trim(),
+        highScore: secondsLeft,
+    };
     names.push(score);
-    document.querySelector("form").reset()
-
-    console.log(names)
-    localStorage.setItem("NameAndScore", JSON.stringify(names))
-}
-
-
-// console.log(questionContainer)
-// for (let i = 0; i < questions.length; i++) {
-//     const question = questions[i];
-//     const choices = question.choices;
-//     const questionHTML = `
-//     <div class="question">
-//       <p>${question.question}</p>
-//       <ul>
-//         ${choices.map(choice => `<button>${choice}</button>`).join("")}
-//       </ul>
-//     </div>
-//   `;
-//    questionContainer.innerHTML += questionHTML;
-// }
-// console.log(questionContainer)
-
-// wrongAnswer1.addEventListener("click", function(){
-//     secondsLeft = secondsLeft - 15;
-//     document.getElementById("question1").style.display = "none";
-//     document.getElementById("question2").style.display = "block";
-// })
-
-//  wrongAnswer2.addEventListener("click", function(){
-//     secondsLeft = secondsLeft - 15;
-//     document.getElementById("question1").style.display = "none";
-//     document.getElementById("question2").style.display = "block";
-//  })
-
-//  wrongAnswer3.addEventListener("click", function(){
-//     secondsLeft = secondsLeft - 15;
-//     document.getElementById("question1").style.display = "none";
-//     document.getElementById("question2").style.display = "block";
-//  })
-
-// rightAnswer1.addEventListener("click", function(){
-//     console.log("next")
-//     document.getElementById("question1").style.display = "none";
-//     document.getElementById("question2").style.display = "block";
-// })
-
-// var questions = {
-//     question1: "what is the sum of 2 and 2",
-//     
-//         answer: "four"
-//         three : false,
-//         four : true,
-//         five : false
-//     }
-// }
-// console.log(questions.answer1.four)
-
-// if (questions.answer1.four === true) {
-//     console.log("next")
-// } else {
-//     console.log("-15")
-// }
+    
+    var showHighScore = `
+    <div class="showHighScore">
+        <p>Initial: ${score.initials} Score: ${score.highScore}</p>
+        `;
+        result.innerHTML += showHighScore
+    
+    localStorage.setItem('NameAndScore', JSON.stringify(names));
+};
